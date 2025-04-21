@@ -51,8 +51,8 @@ struct MarlinRegularWidth: View {
                 }
                 .background(Color.surfaceColor)
                 .padding(.horizontal, 2)
-                .onChange(of: activeRailItem) { newValue in
-                    if let item = newValue {
+                .onChange(of: activeRailItem) {
+                    if let item = activeRailItem {
                         selectedTab = "\(item.key)List"
                     }
                 }

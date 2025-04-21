@@ -47,7 +47,7 @@ struct SearchView: View {
                             searchPublisher.send(search)
                         }
                         .frame(maxWidth: searchExpanded ? .infinity : 0)
-                        .onChange(of: search) { search in
+                        .onChange(of: search) {
                             searchPublisher.send(search)
                         }
                         .onReceive(
@@ -108,7 +108,8 @@ struct SearchView: View {
                                                         snackbarModel: SnackbarModel(
                                                             message: """
                                                             Location \
-                                                            \(coordinateDisplay.format(coordinate: searchResult.coordinate)) \
+                                                            \(coordinateDisplay
+                                                            .format(coordinate: searchResult.coordinate)) \
                                                             copied to clipboard
                                                             """
                                                         )

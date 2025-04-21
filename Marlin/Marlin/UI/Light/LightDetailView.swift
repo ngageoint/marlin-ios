@@ -72,7 +72,8 @@ struct LightDetailView: View {
 
                                     DataSourceActions(
                                         location: Actions.Location(latLng: firstLight.coordinate),
-                                        zoom: LightActions.Zoom(latLng: firstLight.coordinate, itemKey: firstLight.itemKey),
+                                        zoom: LightActions
+                                            .Zoom(latLng: firstLight.coordinate, itemKey: firstLight.itemKey),
                                         bookmark: firstLight.canBookmark ? Actions.Bookmark(
                                             itemKey: firstLight.itemKey,
                                             bookmarkViewModel: bookmarkViewModel
@@ -110,7 +111,7 @@ struct LightDetailView: View {
                 Text("Loading Light \(self.featureNumber) \(self.volumeNumber)")
             }
         }
-        .onChange(of: featureNumber + volumeNumber) { _ in
+        .onChange(of: featureNumber + volumeNumber) {
             viewModel.getLights(featureNumber: featureNumber, volumeNumber: volumeNumber, waypointURI: waypointURI)
             if let firstLight = viewModel.lights.first {
                 bookmarkViewModel.getBookmark(itemKey: firstLight.itemKey, dataSource: DataSources.light.key)

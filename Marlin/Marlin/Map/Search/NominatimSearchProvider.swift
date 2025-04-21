@@ -121,7 +121,7 @@ class NominatimSearchProvider: SearchProvider {
 //                    let mapItem = MKMapItem(placemark: placemark)
 //                    mapItem.name = item.displayName
                     onCompletion([item])
-                case .failure(let error):
+                case .failure:
 //                    let coordPlacemark = MKPlacemark(coordinate: region.center)
 //                    let coordMapItem = MKMapItem(placemark: coordPlacemark)
 //                    coordMapItem.name = "\(region.center.latitude), \(region.center.longitude)"

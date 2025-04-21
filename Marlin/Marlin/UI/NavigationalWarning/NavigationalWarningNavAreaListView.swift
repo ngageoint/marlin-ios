@@ -89,7 +89,7 @@ struct NavigationalWarningNavAreaListView: View {
                         }
                     }
                 }
-                .onChange(of: dataSource.warnings.count) { _ in
+                .onChange(of: dataSource.warnings.count) {
                     let lastSeenNavWarning = dataSource.warnings.first { warning in
                         warning.primaryKey == lastSeen
                     }

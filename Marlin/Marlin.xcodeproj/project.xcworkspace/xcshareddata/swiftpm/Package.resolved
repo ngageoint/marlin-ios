@@ -1,0 +1,33 @@
+{
+  "originHash" : "1a2a2b310f48c5fe1b8882b8b468ff990bfa959d2e9c4554a4deec938b170142",
+  "pins" : [
+    {
+      "identity" : "anycodable",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flight-school/AnyCodable.git",
+      "state" : {
+        "revision" : "862808b2070cd908cb04f9aafe7de83d35f81b05",
+        "version" : "0.6.7"
+      }
+    },
+    {
+      "identity" : "exceptioncatcher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sindresorhus/ExceptionCatcher",
+      "state" : {
+        "revision" : "9e57a89e7ed5e11cbc04fbaa5f1397448f91bb73",
+        "version" : "2.2.0"
+      }
+    },
+    {
+      "identity" : "geojson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kiliankoe/GeoJSON.git",
+      "state" : {
+        "revision" : "ad151210f505181e9e8112b81aefc5f54383f4c2",
+        "version" : "0.6.2"
+      }
+    }
+  ],
+  "version" : 3
+}

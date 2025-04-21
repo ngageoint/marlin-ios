@@ -10,9 +10,9 @@ def common_pods
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'
+  pod 'SwiftLint'
   pod 'MatomoTracker', '~> 7.5'
   pod 'SWXMLHash', '~> 7'
-  pod 'SwiftLint'
   pod 'SwiftUIIntrospect'
 end
 

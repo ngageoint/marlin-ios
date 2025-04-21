@@ -34,14 +34,14 @@ struct ModuRouteSheetView: View {
                 Text("Loading...")
             }
         }
-        .onChange(of: itemKey) { newItemKey in
-            viewModel.getModu(name: newItemKey)
+        .onChange(of: itemKey) {
+            viewModel.getModu(name: itemKey)
         }
-        .onChange(of: viewModel.modu) { model in
+        .onChange(of: viewModel.modu) {
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: viewModel.modu,
                     definition: DataSources.modu
                 )
             )

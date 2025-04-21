@@ -24,17 +24,17 @@ struct RadioBeaconSheetView: View {
                     .setShowTitle(true)
             }
         }
-        .onChange(of: itemKey) { newItemKey in
-            let split = newItemKey.split(separator: "--")
+        .onChange(of: itemKey) {
+            let split = itemKey.split(separator: "--")
             if split.count == 2 {
                 viewModel.getRadioBeacon(featureNumber: Int(split[0]) ?? -1, volumeNumber: "\(split[1])")
             }
         }
-        .onChange(of: viewModel.radioBeacon) { model in
+        .onChange(of: viewModel.radioBeacon) {
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: viewModel.radioBeacon,
                     definition: DataSources.radioBeacon
                 )
             )

@@ -18,7 +18,7 @@ extension View {
         @ViewBuilder content: @escaping () -> Content) -> some View {
         background {
             Color.clear
-                .onChange(of: previewDate.wrappedValue) { _ in
+                .onChange(of: previewDate.wrappedValue) {
                     if let url = previewUrl.wrappedValue {
                         DocumentController.shared.presentDocument(url: url)
                     }

@@ -81,8 +81,8 @@ struct PortSummaryView: DataSourceSummaryView {
                 """
             }
         }
-        .onChange(of: locationManager.lastLocation) { lastLocation in
-            if let currentLocation = lastLocation {
+        .onChange(of: locationManager.lastLocation) {
+            if let currentLocation = locationManager.lastLocation {
                 let metersMeasurement = NSMeasurement(
                     doubleValue: port.distanceTo(currentLocation),
                     unit: UnitLength.meters

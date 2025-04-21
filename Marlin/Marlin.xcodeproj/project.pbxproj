@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
+		A802E4EC2DA6D09C00DF213F /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = A802E4EB2DA6D09C00DF213F /* ExceptionCatcher */; };
 		D6353EA32B68376100444D24 /* SearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA22B68376100444D24 /* SearchProvider.swift */; };
 		D6353EA52B683B9300444D24 /* NativeSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */; };
 		D6353EAA2B6955E200444D24 /* SearchProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA92B6955E200444D24 /* SearchProviderTests.swift */; };
@@ -672,7 +673,6 @@
 		F7FFB31C28D63F5500C31AA3 /* Light+MapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31B28D63F5500C31AA3 /* Light+MapImage.swift */; };
 		F7FFB31E28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB31D28D640C100C31AA3 /* Light+DataSourceViewBuilder.swift */; };
 		F7FFB32828D6427200C31AA3 /* RadioBeaconPropertyContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB32728D6427200C31AA3 /* RadioBeaconPropertyContainer.swift */; };
-		F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */; };
 		F7FFB33628D8F5A300C31AA3 /* LightSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33528D8F5A300C31AA3 /* LightSettingsView.swift */; };
 		F7FFB33828D9EB6900C31AA3 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = F7FFB33728D9EB6800C31AA3 /* CHANGELOG.md */; };
 		F7FFB33A28D9EFDB00C31AA3 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7FFB33928D9EFDB00C31AA3 /* SearchView.swift */; };
@@ -689,13 +689,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = F7A54CB12848149700E5F565;
 			remoteInfo = Marlin;
-		};
-		F7A54CC02848149700E5F565 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F7A54CA32848149500E5F565 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = F7A54CB12848149700E5F565;
-			remoteInfo = "Marlin (iOS)";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -1190,7 +1183,6 @@
 		F7A54CAC2848149500E5F565 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		F7A54CAD2848149600E5F565 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F7A54CB22848149700E5F565 /* Marlin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Marlin.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F7A54CBF2848149700E5F565 /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F7ABB5FD299AC4A500BAD868 /* PublicationListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicationListTests.swift; sourceTree = "<group>"; };
 		F7ABB5FF299AD5E900BAD868 /* fullEpubList.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = fullEpubList.json; sourceTree = "<group>"; };
 		F7ABB601299BD35C00BAD868 /* SearchViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewTests.swift; sourceTree = "<group>"; };
@@ -1400,15 +1392,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F730DFC42A99000D0051775C /* GeoJSON in Frameworks */,
+				A802E4EC2DA6D09C00DF213F /* ExceptionCatcher in Frameworks */,
 				7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */,
-				F7FFB33428D8A58D00C31AA3 /* ExceptionCatcher in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		F7A54CBC2848149700E5F565 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2543,7 +2528,6 @@
 			isa = PBXGroup;
 			children = (
 				F7A54CB22848149700E5F565 /* Marlin.app */,
-				F7A54CBF2848149700E5F565 /* Tests.xctest */,
 				F727A68E284E605800BD728A /* MarlinTests.xctest */,
 			);
 			name = Products;
@@ -3453,30 +3437,12 @@
 			);
 			name = Marlin;
 			packageProductDependencies = (
-				F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */,
 				F730DFC32A99000D0051775C /* GeoJSON */,
+				A802E4EB2DA6D09C00DF213F /* ExceptionCatcher */,
 			);
 			productName = "Marlin (iOS)";
 			productReference = F7A54CB22848149700E5F565 /* Marlin.app */;
 			productType = "com.apple.product-type.application";
-		};
-		F7A54CBE2848149700E5F565 /* Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = F7A54CE52848149700E5F565 /* Build configuration list for PBXNativeTarget "Tests" */;
-			buildPhases = (
-				F7A54CBB2848149700E5F565 /* Sources */,
-				F7A54CBC2848149700E5F565 /* Frameworks */,
-				F7A54CBD2848149700E5F565 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				F7A54CC12848149700E5F565 /* PBXTargetDependency */,
-			);
-			name = Tests;
-			productName = "Tests iOS";
-			productReference = F7A54CBF2848149700E5F565 /* Tests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -3495,10 +3461,6 @@
 					F7A54CB12848149700E5F565 = {
 						CreatedOnToolsVersion = 13.4;
 					};
-					F7A54CBE2848149700E5F565 = {
-						CreatedOnToolsVersion = 13.4;
-						TestTargetID = F7A54CB12848149700E5F565;
-					};
 				};
 			};
 			buildConfigurationList = F7A54CA62848149500E5F565 /* Build configuration list for PBXProject "Marlin" */;
@@ -3512,15 +3474,14 @@
 			);
 			mainGroup = F7A54CA22848149500E5F565;
 			packageReferences = (
-				F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
 				F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */,
+				A802E4EA2DA6D09C00DF213F /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
 			);
 			productRefGroup = F7A54CB32848149700E5F565 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				F7A54CB12848149700E5F565 /* Marlin */,
-				F7A54CBE2848149700E5F565 /* Tests */,
 				F727A68D284E605800BD728A /* MarlinTests */,
 			);
 		};
@@ -3583,13 +3544,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F7A54CBD2848149700E5F565 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
@@ -3601,9 +3555,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -3618,9 +3576,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -4349,13 +4311,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		F7A54CBB2848149700E5F565 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -4363,11 +4318,6 @@
 			isa = PBXTargetDependency;
 			target = F7A54CB12848149700E5F565 /* Marlin */;
 			targetProxy = F727A692284E605800BD728A /* PBXContainerItemProxy */;
-		};
-		F7A54CC12848149700E5F565 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = F7A54CB12848149700E5F565 /* Marlin */;
-			targetProxy = F7A54CC02848149700E5F565 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -4399,6 +4349,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.MarlinTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "MarlinTests/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -4422,6 +4375,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.msi.MarlinTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "MarlinTests/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -4488,6 +4444,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -4541,6 +4498,7 @@
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -4550,12 +4508,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = debug;
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ZL8G5D9G2H;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Marlin/Info.plist;
@@ -4574,12 +4531,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Marlin (Development)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Marlin/Marlin-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -4593,12 +4552,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = debug;
 				DEFINES_MODULE = NO;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = ZL8G5D9G2H;
+				DEVELOPMENT_TEAM = ZL8G5D9G2H;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Marlin/Info.plist;
@@ -4617,56 +4575,19 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.5.0;
+				MARKETING_VERSION = 1.5.1;
 				PRODUCT_BUNDLE_IDENTIFIER = mil.nga.marlin;
 				PRODUCT_NAME = Marlin;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Marlin (Development)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "Marlin/Marlin-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		F7A54CE62848149700E5F565 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZL8G5D9G2H;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "mil.nga.msi.Tests-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Marlin (iOS)";
-			};
-			name = Debug;
-		};
-		F7A54CE72848149700E5F565 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ZL8G5D9G2H;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "mil.nga.msi.Tests-iOS";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "Marlin (iOS)";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -4701,18 +4622,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F7A54CE52848149700E5F565 /* Build configuration list for PBXNativeTarget "Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F7A54CE62848149700E5F565 /* Debug */,
-				F7A54CE72848149700E5F565 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A802E4EA2DA6D09C00DF213F /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
+			requirement = {
+				kind = exactVersion;
+				version = 2.1.0;
+			};
+		};
 		F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kiliankoe/GeoJSON.git";
@@ -4721,26 +4641,18 @@
 				minimumVersion = 0.6.2;
 			};
 		};
-		F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sindresorhus/ExceptionCatcher";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A802E4EB2DA6D09C00DF213F /* ExceptionCatcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A802E4EA2DA6D09C00DF213F /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
+			productName = ExceptionCatcher;
+		};
 		F730DFC32A99000D0051775C /* GeoJSON */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */;
 			productName = GeoJSON;
-		};
-		F7FFB33328D8A58D00C31AA3 /* ExceptionCatcher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = F7FFB33228D8A58D00C31AA3 /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
-			productName = ExceptionCatcher;
 		};
 /* End XCSwiftPackageProductDependency section */
 

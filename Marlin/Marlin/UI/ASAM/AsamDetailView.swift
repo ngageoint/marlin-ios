@@ -78,7 +78,7 @@ struct AsamDetailView: View {
         .dataSourceDetailList()
         .navigationTitle(viewModel.asam?.reference ?? DataSources.asam.fullName)
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: reference) { _ in
+        .onChange(of: reference) {
             viewModel.getAsam(reference: reference, waypointURI: waypointURI)
         }
         .onAppear {

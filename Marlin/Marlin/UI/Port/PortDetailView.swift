@@ -89,7 +89,7 @@ struct PortDetailView: View {
             .navigationTitle(port.portName ?? DataSources.port.fullName)
             .navigationBarTitleDisplayMode(.inline)
             
-            .onChange(of: portNumber) { _ in
+            .onChange(of: portNumber) {
                 viewModel.getPort(portNumber: portNumber, waypointURI: waypointURI)
             }
             .onAppear {

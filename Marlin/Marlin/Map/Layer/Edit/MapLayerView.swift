@@ -21,8 +21,8 @@ struct MapLayerView: View {
         }
         .frame(maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .top)
         .background(Color.backgroundColor)
-        .onChange(of: isPresented) { newValue in
-            if !newValue {
+        .onChange(of: isPresented) {
+            if !isPresented {
                 dismiss()
             }
         }

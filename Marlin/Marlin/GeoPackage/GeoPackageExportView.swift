@@ -95,7 +95,7 @@ struct GeoPackageExportView: View {
             viewModel.setExportParameters(dataSources: dataSources, filters: filters, useMapRegion: useMapRegion)
             Metrics.shared.geoPackageExportView()
         }
-        .onChange(of: viewModel.complete) { _ in
+        .onChange(of: viewModel.complete) {
             guard viewModel.geoPackage?.path != nil else { return }
             isSharePresented = true
         }

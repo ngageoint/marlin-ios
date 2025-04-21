@@ -113,12 +113,12 @@ struct AsamList: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(Color.backgroundColor)
         .foregroundColor(Color.onSurfaceColor)
-        .onChange(of: filterOpen) { filterOpen in
+        .onChange(of: filterOpen) { _, filterOpen in
             if !filterOpen {
                 viewModel.reload()
             }
         }
-        .onChange(of: sortOpen) { sortOpen in
+        .onChange(of: sortOpen) { _, sortOpen in
             if !sortOpen {
                 viewModel.reload()
             }

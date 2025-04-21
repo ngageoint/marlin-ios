@@ -53,8 +53,8 @@ struct PhaseWatcher: View {
         Self._printChanges()
         
         return EmptyView()
-            .onChange(of: phase) { newPhase in
-                MSI.shared.onChangeOfScenePhase(newPhase)
+            .onChange(of: phase) {
+                MSI.shared.onChangeOfScenePhase(phase)
             }
             .onReceive(appState.$lastNotificationRequestDate) { _ in
                 var insertsPerDataSource: [String: Int] = [:]

@@ -34,14 +34,14 @@ struct PortRouteSheetView: View {
                 Text("Loading...")
             }
         }
-        .onChange(of: itemKey) { _ in
+        .onChange(of: itemKey) {
             viewModel.getPort(portNumber: Int(itemKey) ?? -1)
         }
-        .onChange(of: viewModel.port) { model in
+        .onChange(of: viewModel.port) {
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: viewModel.port,
                     definition: DataSources.port
                 )
             )

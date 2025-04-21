@@ -30,7 +30,7 @@ struct SearchSheetView: View {
                 }
             }
         }
-        .onChange(of: itemKey) { newItemKey in
+        .onChange(of: itemKey) { _, newItemKey in
             viewModel.repository = searchRepository
             viewModel.getItem(id: newItemKey)
         }
@@ -38,11 +38,11 @@ struct SearchSheetView: View {
             viewModel.repository = searchRepository
             viewModel.getItem(id: itemKey)
         }
-        .onChange(of: viewModel.searchResult) { model in
+        .onChange(of: viewModel.searchResult) { _, newModel in
             NotificationCenter.default.post(
                 name: focusNotification,
                 object: FocusMapOnItemNotification(
-                    item: model,
+                    item: newModel,
                     definition: DataSources.search
                 )
             )
