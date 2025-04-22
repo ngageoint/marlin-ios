@@ -29,7 +29,17 @@ end
 
 post_install do |installer|
   require 'fileutils'
-  FileUtils.cp_r('Pods/Target Support Files/Pods-Marlin/Pods-Marlin-acknowledgements.plist', 'Resources/Settings.bundle/Acknowledgements.plist', :remove_destination => true)
+  
+  acknowledgements_source_path = 'Pods/Target Support Files/Pods-Marlin/Pods-Marlin-acknowledgements.plist'
+  acknowledgements_dest_path = 'Resources/Settings.bundle/Acknowledgements.plist'
+  puts "Copy Pod acknowledgements file to Settings.bundle"
+  begin
+    FileUtils.cp_r(acknowledgements_source_path, acknowledgements_dest_path, :remove_destination => true)
+    puts "Success: Copied acknowledgements to: #{acknowledgements_dest_path}"
+  rescue => e
+    puts "Error: Failed to copy acknowledgements file: #{e.message}"
+  end
+  
   installer.aggregate_targets.each do |aggregate_target|
     aggregate_target.xcconfigs.each do |config_name, config_file|
       xcconfig_path = aggregate_target.xcconfig_path(config_name)
