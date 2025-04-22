@@ -3,8 +3,12 @@
 *~.nib
 
 build/
+.build/
+*.pbxuser
+*.perspective
+*.perspectivev3
+xcuserdata
 *.xcuserstate
 
-Marlin.xcworkspace
 
 Pods
