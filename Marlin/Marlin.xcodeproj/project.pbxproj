@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
+		73D8B02DD07A8B92D922808D /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 16E37E0013F0B3A545EB79CF /* libPods-MarlinTests.a */; };
+		9C042A0621BCD665C36D7834 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7037DCEBC29F7E726CEAB53E /* libPods-Marlin.a */; };
 		A802E4EC2DA6D09C00DF213F /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = A802E4EB2DA6D09C00DF213F /* ExceptionCatcher */; };
 		D6353EA32B68376100444D24 /* SearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA22B68376100444D24 /* SearchProvider.swift */; };
 		D6353EA52B683B9300444D24 /* NativeSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */; };
@@ -16,7 +17,6 @@
 		D6353EAE2B695F4C00444D24 /* NominatimSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */; };
 		D6353EB02B71449C00444D24 /* SearchType.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EAF2B71449C00444D24 /* SearchType.swift */; };
 		D67E5C9A2A9E4AA5002FCE03 /* MKPolygonExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */; };
-		D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */; };
 		F7013EFA2B90E5F2007780FC /* ActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7013EF92B90E5F2007780FC /* ActivityViewController.swift */; };
 		F7066DA92A45D8C10058122E /* GeoPackageExportViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DA82A45D8C10058122E /* GeoPackageExportViewModel.swift */; };
 		F7066DAB2A462A740058122E /* GeoPackageExportable.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7066DAA2A462A740058122E /* GeoPackageExportable.swift */; };
@@ -471,8 +471,8 @@
 		F76EE1C02B928CBD001128EB /* DifferentialGPSStationCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1A92B928CBD001128EB /* DifferentialGPSStationCoreDataDataSourceTests.swift */; };
 		F76EE1C12B928CBD001128EB /* DifferentialGPSStationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1AA2B928CBD001128EB /* DifferentialGPSStationRepositoryTests.swift */; };
 		F76EE1C22B928CBD001128EB /* DifferentialGPSStationRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1AB2B928CBD001128EB /* DifferentialGPSStationRemoteDataSourceTests.swift */; };
-		F77671CB2B34D5930026DD50 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		F77671CD2B34D75A0026DD50 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		F77671CB2B34D5930026DD50 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		F77671CD2B34D75A0026DD50 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
 		F7830BFD2A8AB6E1008376F7 /* RouteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFC2A8AB6E1008376F7 /* RouteList.swift */; };
 		F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFE2A8BC9F8008376F7 /* GeoPackageExportButton.swift */; };
@@ -693,11 +693,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Marlin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3314854FB4F71C576357EF47 /* Pods-MarlinTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.debug.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.debug.xcconfig"; sourceTree = "<group>"; };
-		34DEDF107D4BA2A7D7541968 /* Pods-Marlin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.debug.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.debug.xcconfig"; sourceTree = "<group>"; };
-		96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MarlinTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
+		16E37E0013F0B3A545EB79CF /* libPods-MarlinTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MarlinTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B7FDF1850F1712590D78C74 /* Pods-Marlin.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.debug.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.debug.xcconfig"; sourceTree = "<group>"; };
+		7037DCEBC29F7E726CEAB53E /* libPods-Marlin.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Marlin.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		92ECA43D91EB3549E1BCF616 /* Pods-MarlinTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.debug.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.debug.xcconfig"; sourceTree = "<group>"; };
+		965D23DF577B0EA07CE85C37 /* Pods-MarlinTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MarlinTests.release.xcconfig"; path = "Target Support Files/Pods-MarlinTests/Pods-MarlinTests.release.xcconfig"; sourceTree = "<group>"; };
 		D6353EA22B68376100444D24 /* SearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProvider.swift; sourceTree = "<group>"; };
 		D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeSearchProvider.swift; sourceTree = "<group>"; };
 		D6353EA92B6955E200444D24 /* SearchProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchProviderTests.swift; sourceTree = "<group>"; };
@@ -705,7 +705,7 @@
 		D6353EAD2B695F4C00444D24 /* NominatimSearchProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NominatimSearchProvider.swift; sourceTree = "<group>"; };
 		D6353EAF2B71449C00444D24 /* SearchType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchType.swift; sourceTree = "<group>"; };
 		D67E5C992A9E4AA5002FCE03 /* MKPolygonExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MKPolygonExtensions.swift; sourceTree = "<group>"; };
-		F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
+		F38631208B8A8CD776AE8BE9 /* Pods-Marlin.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Marlin.release.xcconfig"; path = "Target Support Files/Pods-Marlin/Pods-Marlin.release.xcconfig"; sourceTree = "<group>"; };
 		F7013EF92B90E5F2007780FC /* ActivityViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityViewController.swift; sourceTree = "<group>"; };
 		F7066DA82A45D8C10058122E /* GeoPackageExportViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportViewModel.swift; sourceTree = "<group>"; };
 		F7066DAA2A462A740058122E /* GeoPackageExportable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeoPackageExportable.swift; sourceTree = "<group>"; };
@@ -1383,7 +1383,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D7A569C784B0F2D5720432C4 /* libPods-MarlinTests.a in Frameworks */,
+				73D8B02DD07A8B92D922808D /* libPods-MarlinTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1393,7 +1393,7 @@
 			files = (
 				F730DFC42A99000D0051775C /* GeoJSON in Frameworks */,
 				A802E4EC2DA6D09C00DF213F /* ExceptionCatcher in Frameworks */,
-				7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */,
+				9C042A0621BCD665C36D7834 /* libPods-Marlin.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1405,8 +1405,8 @@
 			children = (
 				F7738AEA2B322B5A00157CA3 /* libKIF.a */,
 				F75F81D229526D5C0062A708 /* libKIF.a */,
-				2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */,
-				96BF65BCD73E70E253A09CB6 /* libPods-MarlinTests.a */,
+				7037DCEBC29F7E726CEAB53E /* libPods-Marlin.a */,
+				16E37E0013F0B3A545EB79CF /* libPods-MarlinTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1414,10 +1414,10 @@
 		BC66EBA07E9373D21DB95518 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				34DEDF107D4BA2A7D7541968 /* Pods-Marlin.debug.xcconfig */,
-				F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */,
-				3314854FB4F71C576357EF47 /* Pods-MarlinTests.debug.xcconfig */,
-				C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */,
+				3B7FDF1850F1712590D78C74 /* Pods-Marlin.debug.xcconfig */,
+				F38631208B8A8CD776AE8BE9 /* Pods-Marlin.release.xcconfig */,
+				92ECA43D91EB3549E1BCF616 /* Pods-MarlinTests.debug.xcconfig */,
+				965D23DF577B0EA07CE85C37 /* Pods-MarlinTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -3403,11 +3403,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F727A694284E605800BD728A /* Build configuration list for PBXNativeTarget "MarlinTests" */;
 			buildPhases = (
-				DED18A34B51E62C55C796ACE /* [CP] Check Pods Manifest.lock */,
+				8601C4367D53E0E57F324301 /* [CP] Check Pods Manifest.lock */,
 				F727A68A284E605800BD728A /* Sources */,
 				F727A68B284E605800BD728A /* Frameworks */,
 				F727A68C284E605800BD728A /* Resources */,
-				649CD5867C6E32651BCB5385 /* [CP] Copy Pods Resources */,
+				C690C900606D88F8224DAB13 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3423,13 +3423,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F7A54CDF2848149700E5F565 /* Build configuration list for PBXNativeTarget "Marlin" */;
 			buildPhases = (
-				BB1C8A177E30776D268E702C /* [CP] Check Pods Manifest.lock */,
+				4EE4137E0B7F52ABE6CEE041 /* [CP] Check Pods Manifest.lock */,
 				F7A54CAE2848149700E5F565 /* Sources */,
 				F7A54CAF2848149700E5F565 /* Frameworks */,
 				F7A54CB02848149700E5F565 /* Resources */,
 				F713616C28B79D810005C69C /* ShellScript */,
-				A9BE0339705748846E8518E1 /* [CP] Copy Pods Resources */,
 				F73356FB2B2B7B8300BEE26F /* ShellScript */,
+				E0A683689E3DCB804863D8EC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -3547,49 +3547,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		649CD5867C6E32651BCB5385 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		A9BE0339705748846E8518E1 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BB1C8A177E30776D268E702C /* [CP] Check Pods Manifest.lock */ = {
+		4EE4137E0B7F52ABE6CEE041 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3611,7 +3569,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DED18A34B51E62C55C796ACE /* [CP] Check Pods Manifest.lock */ = {
+		8601C4367D53E0E57F324301 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3631,6 +3589,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C690C900606D88F8224DAB13 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MarlinTests/Pods-MarlinTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0A683689E3DCB804863D8EC /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Marlin/Pods-Marlin-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F713616C28B79D810005C69C /* ShellScript */ = {
@@ -3896,7 +3888,7 @@
 				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
 				F7222FB82B6D7D2700C3E4F1 /* NoticeToMarinersRemoteDataSource.swift in Sources */,
 				F76EE0F32B9233E3001128EB /* ModuRouteSheetView.swift in Sources */,
-				F77671CB2B34D5930026DD50 /* (null) in Sources */,
+				F77671CB2B34D5930026DD50 /* BuildFile in Sources */,
 				F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */,
 				F76EE0E22B913F84001128EB /* CLLocationCoordinate2D+Validation.swift in Sources */,
 				F76EE14C2B928A69001128EB /* NavigationalWarningDataFetchOperation.swift in Sources */,
@@ -4203,7 +4195,7 @@
 				F7D8FA232924394900E7D0A1 /* NTMGraphics.swift in Sources */,
 				F7C7CB4D2B9F786B001BF8E0 /* SearchProviderDataDefinition.swift in Sources */,
 				F76EE0F82B923461001128EB /* PortRouteSheetView.swift in Sources */,
-				F77671CD2B34D75A0026DD50 /* (null) in Sources */,
+				F77671CD2B34D75A0026DD50 /* BuildFile in Sources */,
 				F715E30F2B766BF400752688 /* DGPSStationGeoPackageExportable.swift in Sources */,
 				F71F2B202ACF3CC700DFB5BA /* PublisherExtensions.swift in Sources */,
 				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,
@@ -4336,7 +4328,7 @@
 /* Begin XCBuildConfiguration section */
 		F727A695284E605800BD728A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3314854FB4F71C576357EF47 /* Pods-MarlinTests.debug.xcconfig */;
+			baseConfigurationReference = 92ECA43D91EB3549E1BCF616 /* Pods-MarlinTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -4362,7 +4354,7 @@
 		};
 		F727A696284E605800BD728A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C95BD18A52FCC50ED2ED6E21 /* Pods-MarlinTests.release.xcconfig */;
+			baseConfigurationReference = 965D23DF577B0EA07CE85C37 /* Pods-MarlinTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -4504,7 +4496,7 @@
 		};
 		F7A54CE02848149700E5F565 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 34DEDF107D4BA2A7D7541968 /* Pods-Marlin.debug.xcconfig */;
+			baseConfigurationReference = 3B7FDF1850F1712590D78C74 /* Pods-Marlin.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -4548,7 +4540,7 @@
 		};
 		F7A54CE12848149700E5F565 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F32BF352638699CBFE1A8D52 /* Pods-Marlin.release.xcconfig */;
+			baseConfigurationReference = F38631208B8A8CD776AE8BE9 /* Pods-Marlin.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
