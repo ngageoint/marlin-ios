@@ -211,7 +211,7 @@ class NavigationalWarningCoreDataDataSource:
     }
 
     func postProcess() async {
-        Kingfisher.ImageCache(name: DataSources.navWarning.key).clearCache()
+        await Kingfisher.ImageCache(name: DataSources.navWarning.key).clearCache()
         DispatchQueue.global(qos: .utility).async {
             let fetchRequest = NavigationalWarning.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "locations == nil")
