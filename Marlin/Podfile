@@ -5,14 +5,10 @@ workspace 'Marlin'
 project 'Marlin.xcodeproj'
 
 def common_pods
-  pod "Alamofire"
-  pod "Kingfisher"
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'
   pod 'SwiftLint'
-  pod 'MatomoTracker', '~> 7.5'
-  pod 'SWXMLHash', '~> 7'
   pod 'SwiftUIIntrospect'
 end
 
@@ -21,8 +17,6 @@ target 'Marlin' do
     target 'MarlinTests' do
       inherit! :search_paths
       common_pods
-      pod 'OHHTTPStubs'
-      pod 'OHHTTPStubs/Swift'
       pod 'KIF', :modular_headers => true, :git => 'https://github.com/kif-framework/KIF.git', :branch => 'jmartin/collection-view-cell-enumeration-assert'
     end
 end

@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0F14076A8393C9747AD1FE /* libPods-Marlin.a */; };
 		A802E4EC2DA6D09C00DF213F /* ExceptionCatcher in Frameworks */ = {isa = PBXBuildFile; productRef = A802E4EB2DA6D09C00DF213F /* ExceptionCatcher */; };
+		A8068B962DC12DAE00C65A32 /* SWXMLHash in Frameworks */ = {isa = PBXBuildFile; productRef = A8068B952DC12DAE00C65A32 /* SWXMLHash */; };
+		A8068B992DC12DBC00C65A32 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = A8068B982DC12DBC00C65A32 /* OHHTTPStubs */; };
+		A8068B9B2DC12DBC00C65A32 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = A8068B9A2DC12DBC00C65A32 /* OHHTTPStubsSwift */; };
+		A8068B9E2DC12DD700C65A32 /* MatomoTracker in Frameworks */ = {isa = PBXBuildFile; productRef = A8068B9D2DC12DD700C65A32 /* MatomoTracker */; };
+		A8068BA12DC12DE700C65A32 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = A8068BA02DC12DE700C65A32 /* Kingfisher */; };
+		A8068BA42DC12E0300C65A32 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = A8068BA32DC12E0300C65A32 /* Alamofire */; };
 		D6353EA32B68376100444D24 /* SearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA22B68376100444D24 /* SearchProvider.swift */; };
 		D6353EA52B683B9300444D24 /* NativeSearchProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA42B683B9300444D24 /* NativeSearchProvider.swift */; };
 		D6353EAA2B6955E200444D24 /* SearchProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6353EA92B6955E200444D24 /* SearchProviderTests.swift */; };
@@ -471,8 +477,8 @@
 		F76EE1C02B928CBD001128EB /* DifferentialGPSStationCoreDataDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1A92B928CBD001128EB /* DifferentialGPSStationCoreDataDataSourceTests.swift */; };
 		F76EE1C12B928CBD001128EB /* DifferentialGPSStationRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1AA2B928CBD001128EB /* DifferentialGPSStationRepositoryTests.swift */; };
 		F76EE1C22B928CBD001128EB /* DifferentialGPSStationRemoteDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F76EE1AB2B928CBD001128EB /* DifferentialGPSStationRemoteDataSourceTests.swift */; };
-		F77671CB2B34D5930026DD50 /* (null) in Sources */ = {isa = PBXBuildFile; };
-		F77671CD2B34D75A0026DD50 /* (null) in Sources */ = {isa = PBXBuildFile; };
+		F77671CB2B34D5930026DD50 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
+		F77671CD2B34D75A0026DD50 /* BuildFile in Sources */ = {isa = PBXBuildFile; };
 		F7830BFB2A8AB3FE008376F7 /* Route+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFA2A8AB3FE008376F7 /* Route+CoreDataClass.swift */; };
 		F7830BFD2A8AB6E1008376F7 /* RouteList.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFC2A8AB6E1008376F7 /* RouteList.swift */; };
 		F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7830BFE2A8BC9F8008376F7 /* GeoPackageExportButton.swift */; };
@@ -1391,8 +1397,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8068BA42DC12E0300C65A32 /* Alamofire in Frameworks */,
+				A8068B992DC12DBC00C65A32 /* OHHTTPStubs in Frameworks */,
+				A8068B9B2DC12DBC00C65A32 /* OHHTTPStubsSwift in Frameworks */,
+				A8068B962DC12DAE00C65A32 /* SWXMLHash in Frameworks */,
 				F730DFC42A99000D0051775C /* GeoJSON in Frameworks */,
+				A8068BA12DC12DE700C65A32 /* Kingfisher in Frameworks */,
 				A802E4EC2DA6D09C00DF213F /* ExceptionCatcher in Frameworks */,
+				A8068B9E2DC12DD700C65A32 /* MatomoTracker in Frameworks */,
 				7982FB9B536447055E423E94 /* libPods-Marlin.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3439,6 +3451,12 @@
 			packageProductDependencies = (
 				F730DFC32A99000D0051775C /* GeoJSON */,
 				A802E4EB2DA6D09C00DF213F /* ExceptionCatcher */,
+				A8068B952DC12DAE00C65A32 /* SWXMLHash */,
+				A8068B982DC12DBC00C65A32 /* OHHTTPStubs */,
+				A8068B9A2DC12DBC00C65A32 /* OHHTTPStubsSwift */,
+				A8068B9D2DC12DD700C65A32 /* MatomoTracker */,
+				A8068BA02DC12DE700C65A32 /* Kingfisher */,
+				A8068BA32DC12E0300C65A32 /* Alamofire */,
 			);
 			productName = "Marlin (iOS)";
 			productReference = F7A54CB22848149700E5F565 /* Marlin.app */;
@@ -3476,6 +3494,11 @@
 			packageReferences = (
 				F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */,
 				A802E4EA2DA6D09C00DF213F /* XCRemoteSwiftPackageReference "ExceptionCatcher" */,
+				A8068B942DC12DAE00C65A32 /* XCRemoteSwiftPackageReference "SWXMLHash" */,
+				A8068B972DC12DBC00C65A32 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
+				A8068B9C2DC12DD700C65A32 /* XCRemoteSwiftPackageReference "matomo-sdk-ios" */,
+				A8068B9F2DC12DE700C65A32 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				A8068BA22DC12E0300C65A32 /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = F7A54CB32848149700E5F565 /* Products */;
 			projectDirPath = "";
@@ -3888,7 +3911,7 @@
 				F7D5C05B28A6B458000C2C29 /* StructureImage.swift in Sources */,
 				F7222FB82B6D7D2700C3E4F1 /* NoticeToMarinersRemoteDataSource.swift in Sources */,
 				F76EE0F32B9233E3001128EB /* ModuRouteSheetView.swift in Sources */,
-				F77671CB2B34D5930026DD50 /* (null) in Sources */,
+				F77671CB2B34D5930026DD50 /* BuildFile in Sources */,
 				F7830BFF2A8BC9F8008376F7 /* GeoPackageExportButton.swift in Sources */,
 				F76EE0E22B913F84001128EB /* CLLocationCoordinate2D+Validation.swift in Sources */,
 				F76EE14C2B928A69001128EB /* NavigationalWarningDataFetchOperation.swift in Sources */,
@@ -4195,7 +4218,7 @@
 				F7D8FA232924394900E7D0A1 /* NTMGraphics.swift in Sources */,
 				F7C7CB4D2B9F786B001BF8E0 /* SearchProviderDataDefinition.swift in Sources */,
 				F76EE0F82B923461001128EB /* PortRouteSheetView.swift in Sources */,
-				F77671CD2B34D75A0026DD50 /* (null) in Sources */,
+				F77671CD2B34D75A0026DD50 /* BuildFile in Sources */,
 				F715E30F2B766BF400752688 /* DGPSStationGeoPackageExportable.swift in Sources */,
 				F71F2B202ACF3CC700DFB5BA /* PublisherExtensions.swift in Sources */,
 				F71E3E3A28F49ABE002F2019 /* SearchResultsMap.swift in Sources */,
@@ -4625,6 +4648,46 @@
 				version = 2.1.0;
 			};
 		};
+		A8068B942DC12DAE00C65A32 /* XCRemoteSwiftPackageReference "SWXMLHash" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/drmohundro/SWXMLHash";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.0;
+			};
+		};
+		A8068B972DC12DBC00C65A32 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AliSoftware/OHHTTPStubs.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.1.0;
+			};
+		};
+		A8068B9C2DC12DD700C65A32 /* XCRemoteSwiftPackageReference "matomo-sdk-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/matomo-org/matomo-sdk-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.7.0;
+			};
+		};
+		A8068B9F2DC12DE700C65A32 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.3.2;
+			};
+		};
+		A8068BA22DC12E0300C65A32 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 		F730DFC22A99000D0051775C /* XCRemoteSwiftPackageReference "GeoJSON" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kiliankoe/GeoJSON.git";
@@ -4640,6 +4703,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A802E4EA2DA6D09C00DF213F /* XCRemoteSwiftPackageReference "ExceptionCatcher" */;
 			productName = ExceptionCatcher;
+		};
+		A8068B952DC12DAE00C65A32 /* SWXMLHash */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8068B942DC12DAE00C65A32 /* XCRemoteSwiftPackageReference "SWXMLHash" */;
+			productName = SWXMLHash;
+		};
+		A8068B982DC12DBC00C65A32 /* OHHTTPStubs */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8068B972DC12DBC00C65A32 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubs;
+		};
+		A8068B9A2DC12DBC00C65A32 /* OHHTTPStubsSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8068B972DC12DBC00C65A32 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */;
+			productName = OHHTTPStubsSwift;
+		};
+		A8068B9D2DC12DD700C65A32 /* MatomoTracker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8068B9C2DC12DD700C65A32 /* XCRemoteSwiftPackageReference "matomo-sdk-ios" */;
+			productName = MatomoTracker;
+		};
+		A8068BA02DC12DE700C65A32 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8068B9F2DC12DE700C65A32 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		A8068BA32DC12E0300C65A32 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8068BA22DC12E0300C65A32 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
 		};
 		F730DFC32A99000D0051775C /* GeoJSON */ = {
 			isa = XCSwiftPackageProductDependency;
