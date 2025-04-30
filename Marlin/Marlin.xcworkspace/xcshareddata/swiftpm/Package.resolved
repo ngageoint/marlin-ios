@@ -1,6 +1,15 @@
 {
-  "originHash" : "1a2a2b310f48c5fe1b8882b8b468ff990bfa959d2e9c4554a4deec938b170142",
+  "originHash" : "b3883e0b33e6c58697d68f3761890f045c552e9eedb0421c78c82149d033b930",
   "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire.git",
+      "state" : {
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
+      }
+    },
     {
       "identity" : "anycodable",
       "kind" : "remoteSourceControl",
@@ -26,6 +35,33 @@
       "state" : {
         "revision" : "ad151210f505181e9e8112b81aefc5f54383f4c2",
         "version" : "0.6.2"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher.git",
+      "state" : {
+        "revision" : "7deda23bbdca612076c5c315003d8638a08ed0f1",
+        "version" : "8.3.2"
+      }
+    },
+    {
+      "identity" : "matomo-sdk-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/matomo-org/matomo-sdk-ios",
+      "state" : {
+        "revision" : "82a1f3b18215381e2133d98b7cc09b5a855ff99d",
+        "version" : "7.7.0"
+      }
+    },
+    {
+      "identity" : "swxmlhash",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/drmohundro/SWXMLHash",
+      "state" : {
+        "revision" : "6ae7b83692c4a2ed53ea2cb0e6cda20768800a99",
+        "version" : "8.1.0"
       }
     }
   ],

@@ -77,7 +77,7 @@ extension LightCoreDataDataSource {
     }
 
     func postProcess() async {
-        Kingfisher.ImageCache(name: DataSources.light.key).clearCache()
+        await Kingfisher.ImageCache(name: DataSources.light.key).clearCache()
         //        imageCache.clearCache()
         let fetchRequest = NSFetchRequest<Light>(entityName: "Light")
         fetchRequest.predicate = NSPredicate(format: "requiresPostProcessing == true")
