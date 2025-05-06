@@ -5,14 +5,10 @@ workspace 'Marlin'
 project 'Marlin.xcodeproj'
 
 def common_pods
-  pod "Alamofire"
-  pod "Kingfisher"
   pod 'geopackage-ios'
   pod 'mgrs-ios'
   pod 'gars-ios'
   pod 'SwiftLint'
-  pod 'MatomoTracker', '~> 7.5'
-  pod 'SWXMLHash', '~> 7'
   pod 'SwiftUIIntrospect'
 end
 
