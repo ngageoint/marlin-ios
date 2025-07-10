@@ -2,6 +2,9 @@
 
 Maritime Safety Information iOS application
 
+## Deprecated - July 9th, 2025
+**Marlin iOS is deprecated.** Some data sources are no longer providing updated data, and the National Geospatial-Intelligence Agency (NGA) is no longer supporting this app. Please contact magesuitesupport@nga.mil for further assistance.
+
 # Origin
 Marlin was developed at the National Geospatial-Intelligence Agency (NGA) in collaboration with CACI. The government has "unlimited rights" and is releasing this software to increase the impact of government investments by providing developers with the opportunity to take things in new directions. The software use, modification, and distribution rights are stipulated within the MIT license.
 
